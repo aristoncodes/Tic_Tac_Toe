@@ -1,0 +1,83 @@
+import random
+
+# Initialize the board
+board = [' ' for _ in range(9)]
+
+# Function to display the board
+def display_board():
+    print(f"{board[0]} | {board[1]} | {board[2]}")
+    print("--+---+--")
+    print(f"{board[3]} | {board[4]} | {board[5]}")
+    print("--+---+--")
+    print(f"{board[6]} | {board[7]} | {board[8]}")
+
+# Function to check if someone has won
+def check_winner(player):
+    # Winning combinations (rows, columns, diagonals)
+    winning_combos = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], # Rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], # Columns
+        [0, 4, 8], [2, 4, 6]             # Diagonals
+    ]
+    
+    for combo in winning_combos:
+        if board[combo[0]] == board[combo[1]] == board[combo[2]] == player:
+            return True
+    return False
+
+# Function to check if the board is full (draw condition)
+def is_draw():
+    return ' ' not in board
+
+# Function to make a move (human player)
+def make_move(player):
+    while True:
+        try:
+            move = int(input(f"Player {player}, enter a position (1-9): ")) - 1
+            if 0 <= move <= 8 and board[move] == ' ':
+                board[move] = player
+                break
+            else:
+                print("Invalid move! Try again.")
+        except ValueError:
+            print("Please enter a number between 1 and 9.")
+
+# Function for the computer to make a move
+def computer_move():
+    available_moves = [i for i, spot in enumerate(board) if spot == ' ']
+    move = random.choice(available_moves)  # Pick a random available move
+    board[move] = 'O'
+    print(f"Computer plays at position {move + 1}")
+
+# Main game loop
+def tic_tac_toe():
+    current_player = 'X'  # Human player is 'X'
+    
+    while True:
+        display_board()
+        
+        if current_player == 'X':
+            make_move(current_player)  # Human move
+        else:
+            computer_move()  # Computer move
+        
+        # Check for a win
+        if check_winner(current_player):
+            display_board()
+            if current_player == 'X':
+                print(f"Player {current_player} wins!")
+            else:
+                print("Computer wins!")
+            break
+        
+        # Check for a draw
+        if is_draw():
+            display_board()
+            print("It's a draw!")
+            break
+        
+        # Switch player
+        current_player = 'O' if current_player == 'X' else 'X'
+
+# Start the game
+tic_tac_toe()
